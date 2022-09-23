@@ -14,6 +14,7 @@ public class MyUser {
     private String name;
     private String username;
     private String password;
+    private String role;
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 }

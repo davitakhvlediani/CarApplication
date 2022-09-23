@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class Model {
+public class ModelDTO {
 
     private String name;
 
