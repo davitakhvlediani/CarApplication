@@ -3,6 +3,7 @@ package com.davit.carApplication.model.domain;
 
 import com.davit.carApplication.model.enums.CarStatus;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,6 +19,8 @@ public class Car {
     @Enumerated(EnumType.STRING)
     private CarStatus carStatus;
     @OneToMany(mappedBy = "car")
+
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     private List<Model> models;
 
 }

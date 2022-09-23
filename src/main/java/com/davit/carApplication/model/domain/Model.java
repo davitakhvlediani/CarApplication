@@ -3,6 +3,7 @@ package com.davit.carApplication.model.domain;
 import com.davit.carApplication.model.enums.CarStatus;
 import com.davit.carApplication.model.enums.ModelStatus;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDate;

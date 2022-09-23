@@ -4,16 +4,13 @@ import com.davit.carApplication.model.domain.Car;
 import com.davit.carApplication.model.domain.Model;
 import com.davit.carApplication.model.domain.ModelToCountry;
 import com.davit.carApplication.model.domain.UserTransaction;
-import com.davit.carApplication.model.dto.CarDTO;
 import com.davit.carApplication.model.dto.ModelDTO;
 import com.davit.carApplication.model.dto.TransactionDto;
-import com.davit.carApplication.model.enums.CarStatus;
 import com.davit.carApplication.model.enums.ModelToCountryStatus;
-import com.davit.carApplication.model.mapper.CarMapper;
 import com.davit.carApplication.model.mapper.ModelMapper;
 import com.davit.carApplication.model.mapper.UserTransactionMapper;
-import com.davit.carApplication.model.param.CarCreateParam;
 import com.davit.carApplication.model.param.ModelCreateParam;
+import com.davit.carApplication.model.param.ModelUpdateParam;
 import com.davit.carApplication.model.param.SellCarParam;
 import com.davit.carApplication.service.CarService;
 import com.davit.carApplication.service.ModelService;
@@ -41,17 +38,17 @@ public class ModelFacade {
         this.userTransactionService = userTransactionService;
     }
 
-    public Page<ModelDTO> getAllCar(Pageable pageable, String search){
+    public Page<ModelDTO> getAllModel(Pageable pageable, String search) {
         Page<Model> all = modelService.getAll(pageable, search);
-        return   all.map(ModelMapper::mapModelToDTO);
+        return all.map(ModelMapper::mapModelToDTO);
     }
 
-    public ModelDTO getModelById(Long id){
+    public ModelDTO getModelById(Long id) {
         Model model = modelService.get(id);
         return ModelMapper.mapModelToDTO(model);
     }
 
-    public ModelDTO saveModel(ModelCreateParam param){
+    public ModelDTO saveModel(ModelCreateParam param) {
         Model model = ModelMapper.mapParamToModel(param);
         Car car = carService.get(param.getCarId());
         model.setCar(car);
@@ -61,19 +58,23 @@ public class ModelFacade {
         return ModelMapper.mapModelToDTO(savedModel);
     }
 
-    public TransactionDto sellCar (SellCarParam param){
+    public void deleteModel(Long id) {
+        modelService.delete(id);
+    }
+
+    public TransactionDto sellCar(SellCarParam param) {
         ModelToCountry modelToCountry = modelToCountryService.findModelToCountryByModelAndCountry(param.getModelId(), param.getCountryId());
-        if(!modelToCountry.getStatus().equals(ModelToCountryStatus.ACTIVE)){
+        if (!modelToCountry.getStatus().equals(ModelToCountryStatus.ACTIVE)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        if(modelToCountry.getQuantity()< param.getQuantity()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Not enough amount!");
+        if (modelToCountry.getQuantity() < param.getQuantity()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough amount!");
         }
         double amountToPay = modelToCountry.getModel().getPrice() * param.getQuantity();
-        if(amountToPay >param.getPayedAmount()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Not enough payed!");
+        if (amountToPay > param.getPayedAmount()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough payed!");
         }
-        modelToCountry.setQuantity(modelToCountry.getQuantity()- param.getQuantity());
+        modelToCountry.setQuantity(modelToCountry.getQuantity() - param.getQuantity());
         UserTransaction userTransaction = new UserTransaction();
         userTransaction.setBoughtCarModel(modelToCountry.getModel());
         userTransaction.setBoughtTime(LocalDateTime.now());
@@ -81,7 +82,13 @@ public class ModelFacade {
         userTransaction.setPayedAmount(param.getPayedAmount());
         userTransaction.setTotalCost(amountToPay);
         UserTransaction savedTransaction = userTransactionService.create(userTransaction);
-        modelToCountryService.update(modelToCountry.getId(),modelToCountry);
+        modelToCountryService.update(modelToCountry.getId(), modelToCountry);
         return UserTransactionMapper.mapUserTransactionToDTO(savedTransaction);
+    }
+
+    public ModelDTO updateModel(Long id, ModelUpdateParam modelUpdateParam) {
+        Model model = modelService.get(id);
+        model.setPrice(modelUpdateParam.getPrice());
+        return ModelMapper.mapModelToDTO(modelService.update(id, model));
     }
 }
