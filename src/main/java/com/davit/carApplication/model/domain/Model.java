@@ -18,6 +18,7 @@ public class Model {
     private LocalDate releaseDate;
     private String color;
     private Double price;
+    private String name;
     private ModelStatus modelStatus;
 
     @ManyToOne

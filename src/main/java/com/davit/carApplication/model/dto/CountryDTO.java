@@ -3,10 +3,9 @@ package com.davit.carApplication.model.dto;
 import lombok.Data;
 
 @Data
-public class CarDTO {
+public class CountryDTO {
 
     private String name;
-
-    private Long id;
-
+    private Double rate;
+    private String code;
 }
