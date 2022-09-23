@@ -1,5 +1,6 @@
 package com.davit.carApplication.model.domain;
 
+import com.davit.carApplication.model.enums.UserRole;
 import com.davit.carApplication.model.enums.UserStatus;
 import lombok.Data;
 
@@ -14,7 +15,9 @@ public class MyUser {
     private String name;
     private String username;
     private String password;
-    private String role;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 }
