@@ -2,7 +2,9 @@ package com.davit.carApplication.repostories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+@NoRepositoryBean
 public interface CommonRepository<E> extends PagingAndSortingRepository<E, Long>, JpaRepository<E, Long>, JpaSpecificationExecutor<E> {
 }
