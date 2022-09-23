@@ -20,6 +20,7 @@ public class Model {
     private String color;
     private Double price;
     private String name;
+    private Double tradeInPercent;
     private ModelStatus modelStatus;
 
     @ManyToOne

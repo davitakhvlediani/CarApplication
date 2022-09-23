@@ -14,5 +14,6 @@ public class ModelDTO {
     private String color;
 
     private Double price;
+    private Double tradeInPercent;
 
 }

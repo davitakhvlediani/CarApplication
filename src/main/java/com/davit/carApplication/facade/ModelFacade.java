@@ -1,21 +1,19 @@
 package com.davit.carApplication.facade;
 
-import com.davit.carApplication.model.domain.Car;
-import com.davit.carApplication.model.domain.Model;
-import com.davit.carApplication.model.domain.ModelToCountry;
-import com.davit.carApplication.model.domain.UserTransaction;
+import com.davit.carApplication.model.domain.*;
 import com.davit.carApplication.model.dto.ModelDTO;
+import com.davit.carApplication.model.dto.TradeInTransactionDTO;
 import com.davit.carApplication.model.dto.TransactionDto;
 import com.davit.carApplication.model.enums.ModelToCountryStatus;
 import com.davit.carApplication.model.mapper.ModelMapper;
+import com.davit.carApplication.model.mapper.TradeInTransactionMapper;
 import com.davit.carApplication.model.mapper.UserTransactionMapper;
 import com.davit.carApplication.model.param.ModelCreateParam;
 import com.davit.carApplication.model.param.ModelUpdateParam;
 import com.davit.carApplication.model.param.SellCarParam;
-import com.davit.carApplication.service.CarService;
-import com.davit.carApplication.service.ModelService;
-import com.davit.carApplication.service.ModelToCountryService;
-import com.davit.carApplication.service.UserTransactionService;
+import com.davit.carApplication.model.param.TradeInParam;
+import com.davit.carApplication.service.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -25,18 +23,15 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 
 @Service
+@RequiredArgsConstructor
 public class ModelFacade {
     private final ModelService modelService;
     private final CarService carService;
     private final ModelToCountryService modelToCountryService;
     private final UserTransactionService userTransactionService;
+    private final TradeInTransactionService tradeInTransactionService;
 
-    public ModelFacade(ModelService modelService, CarService carService, ModelToCountryService modelToCountryService, UserTransactionService userTransactionService) {
-        this.modelService = modelService;
-        this.carService = carService;
-        this.modelToCountryService = modelToCountryService;
-        this.userTransactionService = userTransactionService;
-    }
+
 
     public Page<ModelDTO> getAllModel(Pageable pageable, String search) {
         Page<Model> all = modelService.getAll(pageable, search);
@@ -84,6 +79,32 @@ public class ModelFacade {
         UserTransaction savedTransaction = userTransactionService.create(userTransaction);
         modelToCountryService.update(modelToCountry.getId(), modelToCountry);
         return UserTransactionMapper.mapUserTransactionToDTO(savedTransaction);
+
+    }
+    public TradeInTransactionDTO tradeIn(TradeInParam param){
+        ModelToCountry modelToCountry = modelToCountryService.findModelToCountryByModelAndCountry(param.getModelId(), param.getCountryId());
+        if(!modelToCountry.getStatus().equals(ModelToCountryStatus.ACTIVE)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        Model oldModel = modelService.get(param.getOldModelId());
+        Double oldCarPrice = oldModel.getPrice()*oldModel.getTradeInPercent();
+        double amountToPay = modelToCountry.getModel().getPrice() -oldCarPrice;
+        if(param.getPayedAmount()<amountToPay){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Not enough payed!");
+        }
+        modelToCountry.decrement();
+        TradeInTransaction tradeInTransaction = new TradeInTransaction();
+        tradeInTransaction.setBoughtCarModel(modelToCountry.getModel());
+        tradeInTransaction.setBoughtTime(LocalDateTime.now());
+        tradeInTransaction.setCountry(modelToCountry.getCountry());
+        tradeInTransaction.setPayedAmount(param.getPayedAmount());
+        tradeInTransaction.setTotalCost(amountToPay);
+        tradeInTransaction.setOldCarModel(oldModel);
+        tradeInTransaction.setOldCarValue(oldCarPrice);
+
+        TradeInTransaction savedTradeInTransaction = tradeInTransactionService.create(tradeInTransaction);
+        modelToCountryService.update(modelToCountry.getId(),modelToCountry);
+        return TradeInTransactionMapper.mapTradeInTransactionToDTO(savedTradeInTransaction);
     }
 
     public ModelDTO updateModel(Long id, ModelUpdateParam modelUpdateParam) {
