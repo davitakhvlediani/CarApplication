@@ -23,7 +23,7 @@ public class Model {
     private Double tradeInPercent;
     private ModelStatus modelStatus;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Car car;
 
     @OneToMany(mappedBy = "model")

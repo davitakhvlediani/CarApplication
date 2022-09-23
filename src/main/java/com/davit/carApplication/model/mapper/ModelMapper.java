@@ -14,6 +14,7 @@ public class ModelMapper {
         modelDTO.setReleaseDate(model.getReleaseDate());
         modelDTO.setPrice(model.getPrice());
         modelDTO.setTradeInPercent(model.getTradeInPercent());
+        modelDTO.setId(modelDTO.getId());
         return  modelDTO;
     }
 

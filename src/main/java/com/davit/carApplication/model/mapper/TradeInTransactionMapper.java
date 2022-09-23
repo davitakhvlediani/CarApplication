@@ -16,6 +16,7 @@ public class TradeInTransactionMapper {
         transactionDto.setModelDTO(ModelMapper.mapModelToDTO(transaction.getBoughtCarModel()));
         transactionDto.setTradeInCar( ModelMapper.mapModelToDTO(transaction.getOldCarModel()));
         transactionDto.setTradeInCarPrice(transaction.getOldCarValue());
+        transactionDto.setId(transactionDto.getId());
         return transactionDto;
     }
 }

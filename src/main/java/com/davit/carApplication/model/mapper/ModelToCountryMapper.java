@@ -15,6 +15,7 @@ public class ModelToCountryMapper {
         modelToCountryDTO.setModelDTO(modelDTO);
         CountryDTO countryDTO = CountryMapper.mapCountryToDTO(model.getCountry());
         modelToCountryDTO.setCountryDTO(countryDTO);
+        modelToCountryDTO.setQuantity(model.getQuantity());
         return modelToCountryDTO;
     }
 }

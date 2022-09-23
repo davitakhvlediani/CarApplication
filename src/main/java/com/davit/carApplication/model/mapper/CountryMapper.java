@@ -12,6 +12,7 @@ public class CountryMapper {
         countryDTO.setName(country.getName());
         countryDTO.setRate(country.getRate());
         countryDTO.setCode(country.getCode());
+        countryDTO.setId(countryDTO.getId());
         return countryDTO;
     }
     public static Country mapCountryToDTO(CountryCreateParam param) {

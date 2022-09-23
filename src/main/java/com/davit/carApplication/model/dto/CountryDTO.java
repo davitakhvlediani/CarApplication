@@ -8,4 +8,5 @@ public class CountryDTO {
     private String name;
     private Double rate;
     private String code;
+    private Long id;
 }

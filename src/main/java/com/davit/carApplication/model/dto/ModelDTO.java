@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class ModelDTO {
+    private Long id;
 
     private String name;
 

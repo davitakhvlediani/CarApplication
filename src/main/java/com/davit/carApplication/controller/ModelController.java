@@ -2,10 +2,12 @@ package com.davit.carApplication.controller;
 
 import com.davit.carApplication.facade.ModelFacade;
 import com.davit.carApplication.model.dto.ModelDTO;
+import com.davit.carApplication.model.dto.TradeInTransactionDTO;
 import com.davit.carApplication.model.dto.TransactionDto;
 import com.davit.carApplication.model.param.ModelCreateParam;
 import com.davit.carApplication.model.param.ModelUpdateParam;
 import com.davit.carApplication.model.param.SellCarParam;
+import com.davit.carApplication.model.param.TradeInParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -80,5 +82,11 @@ public class ModelController {
     ){
         return ResponseEntity.ok(modelFacade.getAllModel(page, search));
     }
-
+    @PostMapping("/trade-in")
+    @Operation(summary = "Trade in")
+    public ResponseEntity<TradeInTransactionDTO> tradeIn(
+            @RequestBody TradeInParam tradeInParam
+    ) {
+        return ResponseEntity.ok(modelFacade.tradeIn(tradeInParam));
+    }
 }

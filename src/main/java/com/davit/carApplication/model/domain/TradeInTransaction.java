@@ -22,5 +22,6 @@ public class TradeInTransaction {
     private Double payedAmount;
     private Double totalCost;
     private Double oldCarValue;
+    @ManyToOne
     private Model oldCarModel;
 }
