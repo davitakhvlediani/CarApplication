@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,7 +29,13 @@ public class GlobalExceptionHandler {
         String MethodName = handlerMethod.getMethod().getName();
         return new ResponseEntity<>(ExceptionBody.of(ex, applicationName, MethodName, exceptionName, request.getRequestURI()), HttpStatus.BAD_REQUEST);
     }
-
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> accessDeniedExceptionHandler(AccessDeniedException ex,
+                                                        HandlerMethod handlerMethod, HttpServletRequest request){
+        String exceptionName = ex.getClass().getName();
+        String MethodName = handlerMethod.getMethod().getName();
+        return new ResponseEntity<>(ExceptionBody.of(ex, applicationName, MethodName, exceptionName, request.getRequestURI()), HttpStatus.FORBIDDEN);
+    }
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Object> httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException ex,
                                                         HandlerMethod handlerMethod, HttpServletRequest request){
