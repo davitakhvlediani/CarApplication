@@ -10,4 +10,5 @@ public class ModelCreateParam {
     private String color;
     private Double price;
     private String name;
+    private Long carId;
 }
