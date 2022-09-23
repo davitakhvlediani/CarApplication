@@ -20,8 +20,8 @@ public class CarFacade {
         this.carService = carService;
     }
 
-    public Page<CarDTO> getAllCar(Pageable pageable){
-        Page<Car> all = carService.getAll(pageable);
+    public Page<CarDTO> getAllCar(Pageable pageable, String search){
+        Page<Car> all = carService.getAll(pageable, search);
         return   all.map(CarMapper::mapCarToDto);
     }
 

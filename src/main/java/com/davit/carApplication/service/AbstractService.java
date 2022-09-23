@@ -1,14 +1,18 @@
 package com.davit.carApplication.service;
 
+import com.davit.carApplication.repostories.CommonRepository;
+import com.github.ichanzhar.rsql.JpaRsqlVisitor;
+import com.github.ichanzhar.rsql.utils.RsqlParserFactory;
+import cz.jirutka.rsql.parser.ast.Node;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
-public abstract class AbstractService<E, R extends JpaRepository<E, Long>> {
+public abstract class AbstractService<E, R extends CommonRepository<E>> {
 
     protected final R repository;
 
@@ -30,7 +34,13 @@ public abstract class AbstractService<E, R extends JpaRepository<E, Long>> {
         return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found"));
     }
 
-    public Page<E> getAll(Pageable page) {
+    public Page<E> getAll(Pageable page, String search) {
+        if(search != null){
+            Node rootNode = RsqlParserFactory.INSTANCE.instance().parse(search);
+            Specification<E> spec = rootNode.accept(new JpaRsqlVisitor<>());
+            return repository.findAll(spec, page);
+        }
+
         return repository.findAll(page);
     }
 }

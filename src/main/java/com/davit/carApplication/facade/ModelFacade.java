@@ -41,8 +41,8 @@ public class ModelFacade {
         this.userTransactionService = userTransactionService;
     }
 
-    public Page<ModelDTO> getAllCar(Pageable pageable){
-        Page<Model> all = modelService.getAll(pageable);
+    public Page<ModelDTO> getAllCar(Pageable pageable, String search){
+        Page<Model> all = modelService.getAll(pageable, search);
         return   all.map(ModelMapper::mapModelToDTO);
     }
 

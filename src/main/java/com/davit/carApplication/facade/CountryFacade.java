@@ -26,8 +26,8 @@ public class CountryFacade {
         this.countryService = countryService;
     }
 
-    public Page<CountryDTO> getAllCountry(Pageable pageable){
-        Page<Country> all = countryService.getAll(pageable);
+    public Page<CountryDTO> getAllCountry(Pageable pageable, String search){
+        Page<Country> all = countryService.getAll(pageable, search);
         return   all.map(CountryMapper::mapCountryToDTO);
     }
     public CountryDTO getCountryById(Long id){
