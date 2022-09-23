@@ -13,6 +13,7 @@ public class ModelMapper {
         modelDTO.setColor(model.getColor());
         modelDTO.setReleaseDate(model.getReleaseDate());
         modelDTO.setPrice(model.getPrice());
+        modelDTO.setTradeInPercent(model.getTradeInPercent());
         return  modelDTO;
     }
 
@@ -23,6 +24,7 @@ public class ModelMapper {
         model.setColor(param.getColor());
         model.setReleaseDate(param.getReleaseDate());
         model.setModelStatus(ModelStatus.ACTIVE);
+        model.setTradeInPercent(param.getTradeInPercent());
         return model;
     }
 

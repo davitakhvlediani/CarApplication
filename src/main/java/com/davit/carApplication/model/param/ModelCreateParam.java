@@ -11,4 +11,5 @@ public class ModelCreateParam {
     private Double price;
     private String name;
     private Long carId;
+    private Double tradeInPercent;
 }

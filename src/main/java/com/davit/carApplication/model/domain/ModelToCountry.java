@@ -24,4 +24,7 @@ public class ModelToCountry {
     @Enumerated(EnumType.STRING)
     private ModelToCountryStatus status;
 
+    public void decrement(){
+        this.quantity-=1;
+    }
 }
