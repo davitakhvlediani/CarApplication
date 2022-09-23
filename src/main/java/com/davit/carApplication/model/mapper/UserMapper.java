@@ -16,8 +16,9 @@ public class UserMapper {
 
     public static MyUser fromParam(UserParam userParam) {
         MyUser user = new MyUser();
-        user.setName(userParam.getUsername());
+        user.setUsername(userParam.getUsername());
         user.setUserStatus(UserStatus.ACTIVE);
+        user.setName(userParam.getName());
         user.setRole("user");
         return user;
     }

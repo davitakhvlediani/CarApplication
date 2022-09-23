@@ -20,7 +20,7 @@ public class UserService extends AbstractService<MyUser, UserRepository> {
     public MyUser getUserByUsername(String username){
         Optional<MyUser> userByUsername = repository.findUserByUsername(username);
       return  userByUsername.orElseThrow(()->{
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         });
     }
 

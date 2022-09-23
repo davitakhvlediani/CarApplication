@@ -19,6 +19,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     private final UserService userService;
@@ -32,7 +33,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password =  authentication.getCredentials().toString();
 
         MyUser user = userService.getUserByUsername(username);
-        if(!user.getPassword().equals(encoder.encode(password))){
+        if(!encoder.matches(password,user.getPassword())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong password");
         }
 

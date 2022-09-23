@@ -28,13 +28,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/api/user").permitAll()
-                .antMatchers("/api/user/**").permitAll()
+        http
+                .cors()
+                .and()
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/api/user").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/v3/**").permitAll()
                 .anyRequest().authenticated()
-                .and().httpBasic();
+                .and().formLogin()
+                .defaultSuccessUrl("/swagger-ui/index.html", true);
     }
 
 }
