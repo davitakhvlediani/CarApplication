@@ -1,6 +1,6 @@
 package com.davit.carApplication.controller;
 
-import com.davit.carApplication.model.dto.ModelDTO;
+import com.davit.carApplication.model.dto.Model;
 import com.davit.carApplication.service.ModelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,16 +18,16 @@ public class ModelController {
     private ModelService modelService;
 
     @PostMapping
-    public ResponseEntity<ModelDTO> create(
-            @RequestBody ModelDTO modelDTO
+    public ResponseEntity<Model> create(
+            @RequestBody Model modelDTO
     ){
       return ResponseEntity.ok(modelService.create(modelDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ModelDTO> update(
+    public ResponseEntity<Model> update(
             @PathVariable Long id,
-            @RequestBody ModelDTO modelDTO
+            @RequestBody Model modelDTO
     ){
         return ResponseEntity.ok(modelService.update(id, modelDTO));
     }
@@ -41,14 +41,14 @@ public class ModelController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ModelDTO> get(
+    public ResponseEntity<Model> get(
             @PathVariable Long id
     ){
         return ResponseEntity.ok(modelService.get(id));
     }
 
     @GetMapping
-    public ResponseEntity<Page<ModelDTO>> getAll(
+    public ResponseEntity<Page<Model>> getAll(
            @PageableDefault(value=0, size = 50, sort=("id"), direction = Sort.Direction.ASC)
             Pageable page
     ){

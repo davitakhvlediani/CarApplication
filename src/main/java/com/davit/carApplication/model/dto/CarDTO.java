@@ -7,6 +7,6 @@ public class CarDTO {
 
     private String name;
 
-    private ModelDTO model;
+    private Model model;
 
 }

@@ -10,23 +10,18 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService extends AbstractService<MyUser, UserRepository> {
 
-    private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(UserRepository repository) {
+        super(repository);
     }
 
     public MyUser getUserByUsername(String username){
-        Optional<MyUser> userByUsername = userRepository.findUserByUsername(username);
+        Optional<MyUser> userByUsername = repository.findUserByUsername(username);
       return  userByUsername.orElseThrow(()->{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         });
-    }
-
-    public MyUser saveUser(MyUser user){
-        return userRepository.save(user);
     }
 
 }
